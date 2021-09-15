@@ -3,5 +3,50 @@
 Contact us
 {% endblock %}
 {% block content  %}
-<p>Contact page for the Visual Studio Code Django tutorial.</p>
+<p id='test_text'>New contact page for the Visual Studio Code Django tutorial.</p>
+
+
+<!-- <script src="https://www.gstatic.com/firebasejs/4.0.0/firebase.js"></script> -->
+<script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-app.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-analytics.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-database.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-auth.js"></script>
+
+<!-- <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-database.js"></script> -->
+<script>
+
+    // import { getDatabase, ref, child, get } from "firebase/database";
+
+    // Set the configuration for your app
+    // TODO: Replace with your project's config object
+    var config = {
+        apiKey: "AIzaSyA1XkaqnfFO8pm-yuTK5ggZpAsY27eOwn8",
+        authDomain: "projectId.firebaseapp.com",
+        // For databases not in the us-central1 location, databaseURL will be of the
+        // form https://[databaseName].[region].firebasedatabase.app.
+        // For example, https://your-database-123.europe-west1.firebasedatabase.app
+        databaseURL: "https://connected-temp-sensor-default-rtdb.firebaseio.com/",
+        storageBucket: "bucket.appspot.com"
+    };
+    firebase.initializeApp(config);
+
+    // Get a reference to the database service
+    var userDataRef = firebase.database().ref() //("current_temp");
+
+    var current_temp = '0';
+
+    current_temp = '22'; 
+
+    userDataRef.on("value", function(snapshot) {
+        var output = document.getElementById('test_text');
+        output.innerHTML = snapshot.val().current_temp; 
+    }, function (error) {
+        console.log("Error: " + error.code);
+    });
+
+
+</script>
 {% endblock %}
