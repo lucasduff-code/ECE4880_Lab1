@@ -3,5 +3,60 @@
 Home
 {% endblock %}
 {% block content %}
-<p>Home page for the Visual Studio Code Django tutorial.</p>
+<p>Home page for the Lab 1 Computer Interface. There will be a graph below.</p>
+<button type="button">POWER</button>
+<!-- Rectangular switch -->
+<label class="switch">
+    <input type="checkbox">
+    <span class="slider"></span>
+</label>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js'></script>
+<div class="chart-container" style="position: relative; height: 40vh; width: 80vh;">
+    <canvas id="timeSeriesChart"></canvas>
+</div>
+
+<script>
+const ctx = document.getElementById('timeSeriesChart').getContext('2d');
+
+const startDate = new Date(2020, 0, 1);
+const labels = [];
+for (let i = 0; i < 6; i++) {
+  const date = moment(startDate).add(i, 'days').format('YYYY-MM-DD');
+  labels.push(date.toString());
+}
+var ticks = [50,45,35,30,25,20,15,10];
+const chart = new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels,
+    datasets: [{
+      label: 'Temperature',
+      data: [16, 11, NaN, 10, 12, 9],
+      borderWidth: 5,
+      fill: false,
+      borderColor: 'red'
+    }]
+  },
+  options: {
+      scales: {
+          yAxes :{
+            autoSkip: false,
+            min: ticks[ticks.length-1],
+            Max: ticks[0]
+          },
+          afterBuildTicks: function(scale){
+              scale.ticks = ticks;
+              return;
+          },
+          beforeUpdate: function(oScale){
+          return;
+        }
+      },
+  }
+});
+
+chart.defaults.scales.linear.min = 10
+</script>
+
 {% endblock %}
