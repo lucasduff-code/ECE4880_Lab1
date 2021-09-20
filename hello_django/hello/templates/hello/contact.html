@@ -40,12 +40,15 @@ Contact us
 
     current_temp = '22'; 
 
+
+    // setInterval(function() { 
     userDataRef.on("value", function(snapshot) {
         var output = document.getElementById('test_text');
         output.innerHTML = snapshot.val().current_temp; 
     }, function (error) {
         console.log("Error: " + error.code);
     });
+    // }, 5000);
 
 
 </script>
