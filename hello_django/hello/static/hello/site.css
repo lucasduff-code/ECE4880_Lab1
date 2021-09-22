@@ -28,6 +28,7 @@
 .body-content {
     padding: 5px;
     font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    position: relative;
 }
 
 .switch {
@@ -81,4 +82,19 @@ input:checked + .slider:before {
     -webkit-transform: translateX(26px);
     -ms-transform: translateX(26px);
     transform: translateX(26px);
+}
+
+.notifications{
+    border-style: solid;
+    height: 250px;
+    width: 250px;
+}
+
+.notifications-header{
+    margin: 0;
+    text-align: center;
+}
+
+.max-min-inputs{
+    position: relative;
 }
