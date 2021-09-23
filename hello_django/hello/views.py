@@ -2,6 +2,8 @@ from django.http import HttpResponse
 from django.utils.timezone import datetime
 import re
 from django.shortcuts import render
+from django.http import JsonResponse 
+from django.views.decorators.csrf import csrf_exempt
 
 # Replace the existing home function with the one below
 def home(request):
@@ -22,3 +24,8 @@ def hello_there(request, name):
             'date': datetime.now()
         }
     )
+
+@csrf_exempt
+def send_notification(request):
+
+    return JsonResponse({"status": 'Success'}) 

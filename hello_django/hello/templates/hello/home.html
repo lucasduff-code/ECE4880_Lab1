@@ -4,7 +4,7 @@ Home
 {% endblock %}
 {% block content %}
 <p>Home page for the Lab 1 Computer Interface. There will be a graph below.</p>
-<button id="button" >POWER</button>
+<button id="button" onmousedown="powerUp()" onmouseup="powerDown()" onmouseleave="powerDown()">POWER</button>
 
 <!-- Rectangular switch -->
 <label for="switch">C</label>
@@ -117,7 +117,55 @@ const chart = new Chart(ctx, {
 //chart.defaults.scales.linear.min = 10
 </script>
 
+<script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-analytics.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-auth.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+
 <script>
+  var config = {
+      apiKey: "AIzaSyA1XkaqnfFO8pm-yuTK5ggZpAsY27eOwn8",
+      authDomain: "projectId.firebaseapp.com",
+      databaseURL: "https://connected-temp-sensor-default-rtdb.firebaseio.com/",
+      storageBucket: "bucket.appspot.com"
+  };
+  firebase.initializeApp(config);
+
+  // Get a reference to the database service
+  var userDataRef = firebase.database().ref()
+
+  userDataRef.on("value", function(snapshot) {
+
+      // TODO: pass new data to 
+
+      // TODO: only send sns alert on value outside range
+
+      console.log('Firebase value changed...')
+
+      // commented code below implements call to backend send_notification method
+
+      // let data = new FormData();
+      // data.append("foo", "bar");
+      // axios.post('send_notification/', data) 
+      //     .then(res => alert("Form Submitted")) 
+      //     .catch(errors => console.log(errors)) 
+
+  }, function (error) {
+      console.log("Error: " + error.code);
+  });
+
+  // update firebase to signal virtual button is pressed
+  function powerUp() {
+      userDataRef.update({virtual_button_pressed: "True"})
+  }
+  
+  // update firebase to signal virtual button is not pressed
+  function powerDown() {
+      userDataRef.update({virtual_button_pressed: "False"})
+  }
+
 </script>
 
 {% endblock %}
