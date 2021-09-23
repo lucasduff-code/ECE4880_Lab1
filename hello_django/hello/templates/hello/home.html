@@ -4,14 +4,15 @@ Home
 {% endblock %}
 {% block content %}
 <p>Home page for the Lab 1 Computer Interface. There will be a graph below.</p>
-<button type="button">POWER</button>
+<button id="button" >POWER</button>
+
 <!-- Rectangular switch -->
-<label for="switch">F</label>
-<label class="switch">
-    <input type="checkbox">
+<label for="switch">C</label>
+<label class="switch" onmousedown="conversion()">
+    <input type="checkbox" id="checkbox">
     <span class="slider"></span>
 </label>
-<label for="switch">C</label>
+<label for="switch">F</label>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js'></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js'></script>
 <div class="chart-container" style="position: relative; height: 40vh; width: 80vh;">
@@ -24,19 +25,43 @@ Home
   <div class="max-min-inputs">
     <form>
       <label for="Max">Max:</label>
-      <input type="text" id="Max" name="Max"><br><br>
+      <input type="text" id="Max" name="Max">
+      <label for="Max" id="maxD">C</label>
+      <br><br>
       <label for="Min">Min:</label>
-      <input type="text" id="Min" name="Min"><br><br>
+      <input type="text" id="Min" name="Min">
+      <label for="Min" id="minD">C</label>
+      <br><br>
       <label for="phone">Phone Number:</label>
       <input type="text" id="phone" name="phone"><br><br>
-      <input type="submit" value="Submit">
+      <input type="button" value="Submit">
     </form>
   </div>
 </div>
 
-
-
 <script>
+
+
+function conversion(){
+  console.log("Changed Unit")
+  var max = parseFloat(document.getElementById("Max").value)
+  var min = parseFloat(document.getElementById("Min").value)
+  const currentUnit = document.getElementById("maxD").innerText
+  if(currentUnit == 'C'){
+    document.getElementById("maxD").innerText = 'F'
+    document.getElementById("minD").innerText = 'F'
+    document.getElementById("Max").value = (max * 9/5) + 32
+    document.getElementById("Min").value = (min * 9/5) + 32
+  }else{
+    document.getElementById("maxD").innerText = 'C'
+    document.getElementById("minD").innerText = 'C'
+    document.getElementById("Max").value = (max - 32) / (9/5)
+    document.getElementById("Min").value = (min - 32) / (9/5)
+  }
+}
+
+
+
 const ctx = document.getElementById('timeSeriesChart').getContext('2d');
 
 const startDate = new Date(2020, 0, 1);
@@ -47,16 +72,17 @@ for (let i = 0; i < 6; i++) {
 }
 
 var ticks = [50,45,35,30,25,20,15,10];
+var data = [16, 11, NaN, 10, 12, 9]
 const chart = new Chart(ctx, {
   type: 'line',
-  axesY :{
-          title: "Temperature"
-        },
   data: {
     labels,
+    axesY :{
+          title: "Temperature"
+        },
     datasets: [{
       label: 'Temperature',
-      data: [16, 11, NaN, 10, 12, 9],
+      data: data,
       borderWidth: 5,
       fill: false,
       borderColor: 'red'
@@ -83,7 +109,10 @@ const chart = new Chart(ctx, {
   }
 });
 
-chart.defaults.scales.linear.min = 10
+//chart.defaults.scales.linear.min = 10
+</script>
+
+<script>
 </script>
 
 {% endblock %}
