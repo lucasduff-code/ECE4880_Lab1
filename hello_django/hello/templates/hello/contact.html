@@ -15,6 +15,82 @@ Contact us
 
 <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-auth.js"></script>
 
+<!-- <script src="https://unpkg.com/axios/dist/axios.min.js"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+
+
+
+
+<button type="button" onmousedown="powerUp()" onmouseup="powerDown()" onmouse="powerDown()">POWER°F</button>
+
+
+
+<!-- <script>
+    function powerUp() {
+
+    }
+</script> -->
+
+
+
+
+<!-- <script>
+    function handleSwitch() {
+        console.log("Power !!")
+
+        // set innertext current reading C
+
+
+        // data = firebase get ...
+
+        // redraw(data)
+
+
+    }
+</script>
+ -->
+
+
+
+
+
+
+
+<script>
+    function redraw() {
+        console.log("Power !!")
+
+        // parse the data into array
+
+        // y max = C max
+        // if switch is F
+        //     y max = F max
+        //     loop through array
+        //         value = value * 5/9 + 32
+
+        // graph 
+
+    }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <!-- <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-database.js"></script> -->
 <script>
 
@@ -34,22 +110,55 @@ Contact us
     firebase.initializeApp(config);
 
     // Get a reference to the database service
-    var userDataRef = firebase.database().ref() //("current_temp");
+    var userDataRef = firebase.database().ref()
+
+
+    var send_string = "test"
+
+    // userDataRef.update({last_300_seconds: send_string})
+    
+    // ({temps:{last_300_seconds: send_string}})
 
     var current_temp = '0';
-
     current_temp = '22'; 
 
 
     // setInterval(function() { 
+
     userDataRef.on("value", function(snapshot) {
         var output = document.getElementById('test_text');
-        output.innerHTML = snapshot.val().current_temp; 
+        
+        output.innerHTML = snapshot.val().last_300_seconds; 
+
+        console.log(snapshot.val().last_300_seconds)
+
+        redraw(snapshot.val().last_300_seconds);
+
+
+
+        let data = new FormData();
+
+        data.append("foo", "bar")  
+
+        axios.post('send_notification/', data) // 4
+            .then(res => alert("Form Submitted")) // 5
+            .catch(errors => console.log(errors)) // 6
+
+
     }, function (error) {
         console.log("Error: " + error.code);
     });
     // }, 5000);
 
+
+    function powerUp() {
+        userDataRef.update({virtual_button_pressed: "True"})
+    }
+
+    
+    function powerDown() {
+        userDataRef.update({virtual_button_pressed: "False"})
+    }
 
 </script>
 {% endblock %}

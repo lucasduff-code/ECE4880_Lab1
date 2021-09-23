@@ -3,7 +3,10 @@ from botocore.config import Config
 import random
 
 session = boto3.Session()
-write_client = session.client('timestream-write',  region_name='us-east-2', aws_access_key_id='AKIA45ZVKLZMCBETJUAR', aws_secret_access_key='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', config=Config(read_timeout=20, max_pool_connections = 5000, retries={'max_attempts': 10})) 
+
+# TODO: read AWS keys from file
+
+write_client = session.client('timestream-write',  region_name='us-east-2', aws_access_key_id='', aws_secret_access_key='', config=Config(read_timeout=20, max_pool_connections = 5000, retries={'max_attempts': 10})) 
 
 
 print("Writing records")
