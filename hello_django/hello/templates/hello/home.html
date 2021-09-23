@@ -46,6 +46,10 @@ function conversion(){
   console.log("Changed Unit")
   var max = parseFloat(document.getElementById("Max").value)
   var min = parseFloat(document.getElementById("Min").value)
+  if (max == NaN && min == NaN){
+    document.getElementById("Max").value = ""
+    document.getElementById("Min").value = ""
+  }
   const currentUnit = document.getElementById("maxD").innerText
   if(currentUnit == 'C'){
     document.getElementById("maxD").innerText = 'F'
@@ -91,12 +95,13 @@ const chart = new Chart(ctx, {
   options: {
       scales: {
         
-        /*
-          axesY :{
+        
+          yAxis :{
             autoSkip: false,
             min: ticks[ticks.length-1],
             Max: ticks[0]
           },
+          /*
           afterBuildTicks: function(scale){
               scale.ticks = ticks;
               return;
