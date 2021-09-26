@@ -88,6 +88,7 @@ input:checked + .slider:before {
     border-style: solid;
     height: 250px;
     width: 250px;
+    padding: 30px;
 }
 
 .notifications-header{
@@ -97,4 +98,5 @@ input:checked + .slider:before {
 
 .max-min-inputs{
     position: relative;
+    padding: 10px;
 }
