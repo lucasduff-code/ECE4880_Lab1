@@ -34,10 +34,29 @@ Home
       <br><br>
       <label for="phone">Phone Number:</label>
       <input type="text" id="phone" name="phone"><br><br>
-      <input type="button" value="Submit">
+      <input type="button" value="Save/Edit" onclick="toggleSaved('Max','Min','phone')">
     </form>
   </div>
 </div>
+
+<script>
+  function toggleSaved(maxBox, minBox,numberBox) {
+    if (document.getElementById(maxBox).disabled == true) {
+      document.getElementById(maxBox).disabled = false;
+      document.getElementById(minBox).disabled = false;
+      document.getElementById(numberBox).disabled = false;
+    }
+    else {
+      document.getElementById(maxBox).disabled = true;
+      document.getElementById(minBox).disabled = true;
+      document.getElementById(numberBox).disabled = true;
+    }
+
+  }
+
+</script>
+
+
 
 <script>
 
@@ -146,11 +165,16 @@ const chart = new Chart(ctx, {
 
       // commented code below implements call to backend send_notification method
 
-      // let data = new FormData();
-      // data.append("foo", "bar");
-      // axios.post('send_notification/', data) 
-      //     .then(res => alert("Form Submitted")) 
-      //     .catch(errors => console.log(errors)) 
+      if (document.getElementById('Max').disabled == true) {
+        var to_num = document.getElementById('phone').value
+        console.log(to_num)
+
+        let data = new FormData();
+        data.append("foo", "bar");
+        axios.post('send_notification/' + to_num + '/working', data) 
+            .then(res => alert("Form Submitted")) 
+            .catch(errors => console.log(errors)) 
+      }
 
   }, function (error) {
       console.log("Error: " + error.code);

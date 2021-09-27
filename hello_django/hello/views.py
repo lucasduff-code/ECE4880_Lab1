@@ -4,6 +4,8 @@ import re
 from django.shortcuts import render
 from django.http import JsonResponse 
 from django.views.decorators.csrf import csrf_exempt
+import os
+from twilio.rest import Client
 
 # Replace the existing home function with the one below
 def home(request):
@@ -26,6 +28,22 @@ def hello_there(request, name):
     )
 
 @csrf_exempt
-def send_notification(request):
+def send_notification(request, to_num, message):
+
+    # account_sid = os.environ['TWILIO_ACCOUNT_SID'] 
+    # auth_token = os.environ['TWILIO_AUTH_TOKEN'] 
+    # client = Client(account_sid, auth_token)
+
+    # message = client.messages \
+    #                 .create(
+    #                     body= message, #"Good morning Brogrammers!",
+    #                     from_='+15052278737',
+    #                     to=to_num #'+15635439088'
+    #                 )
+
+    # print(message.sid)
+
+    print('SENT MESSAGE!')
+
 
     return JsonResponse({"status": 'Success'}) 
