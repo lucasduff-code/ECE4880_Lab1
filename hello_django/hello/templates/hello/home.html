@@ -155,7 +155,11 @@ const chart = new Chart(ctx, {
   // Get a reference to the database service
   var userDataRef = firebase.database().ref()
 
-  userDataRef.on("value", function(snapshot) {
+  // var testValueRef = firebase.database().ref("connected-temp-sensor-default-rtdb/test_value")
+
+  var testValueRef = userDataRef.child("last_300_seconds")
+
+  testValueRef.on("value", function(snapshot) {
 
       // TODO: pass new data to 
 
