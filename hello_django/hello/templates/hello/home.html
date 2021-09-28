@@ -198,16 +198,44 @@ document.getElementById("CurrentTemperature").value = data.at(-1)
   firebase.initializeApp(config);
 
   // Get a reference to the database service
-  var userDataRef = firebase.database().ref()
+  var userDataRef = firebase.database().ref();
+  var tempValuesRef = userDataRef.child("last_300_seconds");
 
-  userDataRef.on("value", function(snapshot) {
+  var outside_range = false;
+
+  tempValuesRef.on("value", function(snapshot) {
 
       // TODO: pass new data to 
 
       // TODO: only send sns alert on value outside range
 
-      console.log('Firebase value changed...')
+      console.log('Firebase value changed...');
+      console.log(typeof(snapshot.val()));
+      console.log(snapshot.val().at(-1));
+      console.log(snapshot.val());
 
+      var temps = snapshot.val();
+      var current_temp = temps.at(0);
+
+      let temp_data = [];
+      
+
+      for (let i = 0; i < temps.length; i++) {
+        i = i + 1;
+          if (temps.at(-i) != "DNA" || temps.at(-i) != "US") {
+            temp_data.push(parseFloat(temps.at(-i))/1000);
+          }
+          else {
+            temp_data.push(NaN);
+          }
+      }
+
+      for (let i = 0; i < 300 - temps.length; i++) {
+        temp_data.push(NaN);
+      }
+
+      console.log(temp_data);
+  
       // commented code below implements call to backend send_notification method
 
       if (document.getElementById('Max').disabled == true) {
