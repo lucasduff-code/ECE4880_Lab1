@@ -170,18 +170,23 @@ const chart = new Chart(ctx, {
       console.log(snapshot.val());
 
       var temps = snapshot.val();
-      var current_temp = temps.at(-1);
+      var current_temp = temps.at(0);
 
       let temp_data = [];
       
 
       for (let i = 0; i < temps.length; i++) {
-          if (temps.at(i) != "DNA" || temps.at(i) != "US") {
-            temp_data.push(parseFloat(temps.at(i))/1000);
+        i = i + 1;
+          if (temps.at(-i) != "DNA" || temps.at(-i) != "US") {
+            temp_data.push(parseFloat(temps.at(-i))/1000);
           }
           else {
             temp_data.push(NaN);
           }
+      }
+
+      for (let i = 0; i < 300 - temps.length; i++) {
+        temp_data.push(NaN);
       }
 
       console.log(temp_data);
