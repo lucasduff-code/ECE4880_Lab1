@@ -38,6 +38,13 @@ Home
     </form>
   </div>
 </div>
+<div class="currentReading" style="position: absolute; top: 100px; left: 1000px;">
+  <form>
+    <label for="CurrentTemperature" style="font-size: larger; font-weight: bold;">Current Temperature: </label><br>
+    <input type="text" id="CurrentTemperature" readonly style="font-size: larger; font-weight: bold;">
+    <label for="CurrentTemperature" id="unit" style="font-size: larger; font-weight: bold;">C°</label>
+  </form>
+</div>
 
 <script>
   function toggleSaved(maxBox, minBox,numberBox) {
@@ -72,8 +79,10 @@ function conversion(){
   if(currentUnit == 'C'){
     document.getElementById("maxD").innerText = 'F'
     document.getElementById("minD").innerText = 'F'
-    document.getElementById("Max").value = (max * 9/5) + 32
-    document.getElementById("Min").value = (min * 9/5) + 32
+    document.getElementById("unit").innerText = 'F°'
+    document.getElementById("CurrentTemperature").value = Number(Math.round(((max * 9/5) + 32)+'e2')+'e-2');
+    document.getElementById("Max").value = Number(Math.round(((max * 9/5) + 32)+'e2')+'e-2');
+    document.getElementById("Min").value =  Number(Math.round(((min * 9/5) + 32)+'e2')+'e-2');
     console.log(NUMBER_CFG.min)
     for(var i = 0, length = data.length; i<length; i++){
       data[i] = (data[i] * 9/5) +32
@@ -84,8 +93,10 @@ function conversion(){
   }else{
     document.getElementById("maxD").innerText = 'C'
     document.getElementById("minD").innerText = 'C'
-    document.getElementById("Max").value = (max - 32) / (9/5)
-    document.getElementById("Min").value = (min - 32) / (9/5)
+    document.getElementById("unit").innerText = 'C°'
+    document.getElementById("CurrentTemperature").value =  Number(Math.round(((max - 32) / (9/5))+'e2')+'e-2');
+    document.getElementById("Max").value =  Number(Math.round(((max - 32) / (9/5))+'e2')+'e-2');
+    document.getElementById("Min").value =  Number(Math.round(((min - 32) / (9/5))+'e2')+'e-2');
     for(var i = 0, length = data.length; i<length; i++){
       data[i] = (data[i] -32) / (9/5)
     }
@@ -110,9 +121,8 @@ function numbers(config) {
 
 const ctx = document.getElementById('timeSeriesChart').getContext('2d');
 
-const startDate = new Date(2020, 0, 1);
 const labels = [];
-for (let i = 0; i < 6; i++) {
+for (let i = 0; i < 300; i++) {
   //const date = moment(startDate).add(i, 'days').format('YYYY-MM-DD');
   //labels.push(date.toString());
   const time = i
@@ -120,7 +130,7 @@ for (let i = 0; i < 6; i++) {
 }
 
 var ticks = [50,45,35,30,25,20,15,10];
-var data = [16, 11, NaN, 10, 12, 9]
+var data = [16, 11, NaN, 10, 80, 9]
 var NUMBER_CFG = {count: data.length, min:10, max:50}
 var secondSetData = [10,50]
 const chart = new Chart(ctx, {
@@ -165,6 +175,8 @@ const chart = new Chart(ctx, {
       },
   }
 });
+
+document.getElementById("CurrentTemperature").value = data.at(-1)
 
 //chart.defaults.scales.linear.min = 10
 </script>
