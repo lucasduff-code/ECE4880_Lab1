@@ -15,7 +15,7 @@ Home
 <label for="switch">F</label>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js'></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js'></script>
-<div class="chart-container" style="position: relative; height: 40vh; width: 80vh; padding: 30px; border: 2px solid; resize: both;">
+<div class="chart-container" style="position: relative; height: 60vh; width: 120vh; padding: 30px; border: 2px solid; resize: both;">
   <canvas id="timeSeriesChart"></canvas>
 </div>
 <div class="notifications">
@@ -46,6 +46,7 @@ Home
   </form>
 </div>
 
+<!-- Toggles the Notification Settings input boxes -->
 <script>
   function toggleSaved(maxBox, minBox,numberBox) {
     if (document.getElementById(maxBox).disabled == true) {
@@ -58,128 +59,9 @@ Home
       document.getElementById(minBox).disabled = true;
       document.getElementById(numberBox).disabled = true;
     }
-
   }
-
 </script>
 
-
-
-<script>
-
-function conversion(){
-  console.log("Changed Unit")
-  var max = parseFloat(document.getElementById("Max").value)
-  var min = parseFloat(document.getElementById("Min").value)
-  if (max == NaN && min == NaN){
-    document.getElementById("Max").value = ""
-    document.getElementById("Min").value = ""
-  }
-  const currentUnit = document.getElementById("maxD").innerText
-  if(currentUnit == 'C'){
-    document.getElementById("maxD").innerText = 'F'
-    document.getElementById("minD").innerText = 'F'
-    document.getElementById("unit").innerText = 'F°'
-    document.getElementById("CurrentTemperature").value = Number(Math.round(((max * 9/5) + 32)+'e2')+'e-2');
-    document.getElementById("Max").value = Number(Math.round(((max * 9/5) + 32)+'e2')+'e-2');
-    document.getElementById("Min").value =  Number(Math.round(((min * 9/5) + 32)+'e2')+'e-2');
-    console.log(NUMBER_CFG.min)
-    for(var i = 0, length = data.length; i<length; i++){
-      data[i] = (data[i] * 9/5) +32
-    }
-    secondSetData[0] = 50
-    secondSetData[1] = 122
-    chart.update()
-  }else{
-    document.getElementById("maxD").innerText = 'C'
-    document.getElementById("minD").innerText = 'C'
-    document.getElementById("unit").innerText = 'C°'
-    document.getElementById("CurrentTemperature").value =  Number(Math.round(((max - 32) / (9/5))+'e2')+'e-2');
-    document.getElementById("Max").value =  Number(Math.round(((max - 32) / (9/5))+'e2')+'e-2');
-    document.getElementById("Min").value =  Number(Math.round(((min - 32) / (9/5))+'e2')+'e-2');
-    for(var i = 0, length = data.length; i<length; i++){
-      data[i] = (data[i] -32) / (9/5)
-    }
-    secondSetData[0] = 10
-    secondSetData[1] = 50
-    chart.update()
-  }
-}
-/////
-function numbers(config) {
-  var cfg = config || {};
-  var min = cfg.min;
-  var max = cfg.max;
-
-  var data = [min,max];
-
-
-  return data;
-}
-/////
-
-
-const ctx = document.getElementById('timeSeriesChart').getContext('2d');
-
-const labels = [];
-for (let i = 0; i < 300; i++) {
-  //const date = moment(startDate).add(i, 'days').format('YYYY-MM-DD');
-  //labels.push(date.toString());
-  const time = i
-  labels.push(time.toString())
-}
-
-var ticks = [50,45,35,30,25,20,15,10];
-var data = [16, 11, NaN, 10, 80, 9]
-var NUMBER_CFG = {count: data.length, min:10, max:50}
-var secondSetData = [10,50]
-const chart = new Chart(ctx, {
-  type: 'line',
-  data: {
-    labels,
-    axesY :{
-          title: "Temperature"
-        },
-    datasets: [{
-      label: 'Temperature',
-      data: data,
-      borderWidth: 5,
-      fill: false,
-      borderColor: 'red'
-    },
-    {
-      data:secondSetData,//numbers(NUMBER_CFG),
-      fill: false,
-      borderColor: 'white',
-    }]
-  },
-  options: {
-    legend:{
-          display: false
-      },
-      scales: {
-          yAxis :{
-            autoSkip: false,
-            min: ticks[ticks.length-1],
-            Max: ticks[0]
-          },
-          /*
-          afterBuildTicks: function(scale){
-              scale.ticks = ticks;
-              return;
-          },
-          beforeUpdate: function(oScale){
-          return;
-        }
-        */
-      },
-  }
-});
-
-document.getElementById("CurrentTemperature").value = data.at(-1)
-
-//chart.defaults.scales.linear.min = 10
-</script>
 
 <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-analytics.js"></script>
@@ -188,7 +70,103 @@ document.getElementById("CurrentTemperature").value = data.at(-1)
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
 
+<!-- script that handles conversion, creating the chart, and firebase notifications -->
 <script>
+  // Converts text
+  function conversion(){
+    console.log("Changed Unit")
+    var max = parseFloat(document.getElementById("Max").value)
+    var min = parseFloat(document.getElementById("Min").value)
+    if (max == NaN && min == NaN){
+      document.getElementById("Max").value = ""
+      document.getElementById("Min").value = ""
+    }
+    const currentUnit = document.getElementById("maxD").innerText
+    if(currentUnit == 'C'){
+      document.getElementById("maxD").innerText = 'F'
+      document.getElementById("minD").innerText = 'F'
+      document.getElementById("unit").innerText = 'F°'
+      document.getElementById("CurrentTemperature").value = Number(Math.round(((max * 9/5) + 32)+'e2')+'e-2');
+      document.getElementById("Max").value = Number(Math.round(((max * 9/5) + 32)+'e2')+'e-2');
+      document.getElementById("Min").value =  Number(Math.round(((min * 9/5) + 32)+'e2')+'e-2');
+      console.log(NUMBER_CFG.min)
+      for(var i = 0, length = data_t.length; i<length; i++){
+        data_t[i] = (data_t[i] * 9/5) +32
+      }
+      secondSetData[0] = 50
+      secondSetData[1] = 122
+      chart.update()
+    }else{
+      document.getElementById("maxD").innerText = 'C'
+      document.getElementById("minD").innerText = 'C'
+      document.getElementById("unit").innerText = 'C°'
+      document.getElementById("CurrentTemperature").value =  Number(Math.round(((max - 32) / (9/5))+'e2')+'e-2');
+      document.getElementById("Max").value =  Number(Math.round(((max - 32) / (9/5))+'e2')+'e-2');
+      document.getElementById("Min").value =  Number(Math.round(((min - 32) / (9/5))+'e2')+'e-2');
+      for(var i = 0, length = data_t.length; i<length; i++){
+        data_t[i] = (data_t[i] -32) / (9/5)
+      }
+      secondSetData[0] = 10
+      secondSetData[1] = 50
+      chart.update()
+    }
+  }
+  ///// looks unused?
+  // function numbers(config) {
+  //   var cfg = config || {};
+  //   var min = cfg.min;
+  //   var max = cfg.max;
+  //   var data = [min,max];
+  //   return data;
+  // }
+  /////
+
+  // let temp_data = [];
+  const ctx = document.getElementById('timeSeriesChart').getContext('2d');
+  const labels = [];
+  for (let i = 0; i < 300; i++) {
+    const time = i;
+    labels.push(time.toString());
+  }
+  var ticks = [50,45,35,30,25,20,15,10]; 
+  var data_t = new Array(300).fill(NaN); //[31,32,33,34,25,24,22,11]; // temp_data
+  var NUMBER_CFG = {count: data_t.length, min:10, max:50}
+  var secondSetData = [10,50] // sets y-axis
+  const chart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      axesY :{
+        title: "Temperature"
+      },
+      datasets: [{
+        // label: 'Temperature',
+        data: data_t,
+        borderWidth: 5,
+        fill: false,
+        borderColor: 'red'
+      },
+      {
+        data:secondSetData, //numbers(NUMBER_CFG),
+        fill: false,
+        borderColor: 'blue',
+      }]
+    },
+    options: {
+      legend:{
+        display: false
+      },
+      scales: {
+        yAxis :{
+          autoSkip: false,
+          min: ticks[ticks.length-1],
+          Max: ticks[0]
+        },
+      },
+    }
+  });
+
+  // start of firebase notification code
   var config = {
       apiKey: "AIzaSyA1XkaqnfFO8pm-yuTK5ggZpAsY27eOwn8",
       authDomain: "projectId.firebaseapp.com",
@@ -202,39 +180,125 @@ document.getElementById("CurrentTemperature").value = data.at(-1)
   var tempValuesRef = userDataRef.child("last_300_seconds");
 
   var outside_range = false;
-
   tempValuesRef.on("value", function(snapshot) {
-
-      // TODO: pass new data to 
-
-      // TODO: only send sns alert on value outside range
 
       console.log('Firebase value changed...');
       console.log(typeof(snapshot.val()));
       console.log(snapshot.val().at(-1));
       console.log(snapshot.val());
-
-      var temps = snapshot.val();
-      var current_temp = temps.at(0);
-
-      let temp_data = [];
       
-
+      let temp_data = [];
+      // parse temp data
+      var temps = snapshot.val();
       for (let i = 0; i < temps.length; i++) {
-        i = i + 1;
-          if (temps.at(-i) != "DNA" || temps.at(-i) != "US") {
-            temp_data.push(parseFloat(temps.at(-i))/1000);
+        temp_i = i + 1;
+          if (temps.at(-temp_i) != "DNA" || temps.at(-temp_i) != "US") {
+            temp_at_time = parseFloat(temps.at(-temp_i))/1000;
+            if (temp_at_time > 50) {
+              temp_data.push(50);
+            }
+            else if (temp_at_time < 10) {
+              temp_data.push(10);
+            }
+            else {
+              temp_data.push(temp_at_time);
+            }
           }
           else {
             temp_data.push(NaN);
           }
       }
-
-      for (let i = 0; i < 300 - temps.length; i++) {
+      td_length = temp_data.length
+      for (let i = 0; i < 300 - td_length; i++) {
         temp_data.push(NaN);
       }
-
+      console.log('temp data')
       console.log(temp_data);
+
+      console.log('updating chart')
+      console.log(chart)
+      for (let i = 0; i < 300; i++) {
+       data_t[i] = temp_data[i];
+      }
+      const currentUnit = document.getElementById("maxD").innerText
+      if(currentUnit == 'F') {
+        for(var i = 0, length = data_t.length; i<length; i++){
+          data_t[i] = (data_t[i] * 9/5) +32
+        }
+      }
+      chart.update();
+      var current_temp = temp_data.at(0);
+      document.getElementById('CurrentTemperature').value = current_temp;
+
+      // conversion();
+
+            
+      //////////////// 
+
+      // const ctx = document.getElementById('timeSeriesChart').getContext('2d')
+      // const labels = [];
+      // for (let i = 0; i < 300; i++) {
+        // const time = 300-i
+        // labels.push(time.toString())
+      // }
+      // var ticks = [50,45,35,30,25,20,15,10];
+      // var data = [31,32,33,34,25,24,22,11]; // temp_data
+      // var NUMBER_CFG = {count: data.length, min:10, max:50}
+      // var secondSetData = [10,50]
+
+      ///
+      // chart = new Chart(ctx, {
+      //   type: 'line',
+      //   data: {
+      //     labels,
+      //     axesY :{
+      //           title: "Temperature"
+      //         },
+      //     datasets: [{
+      //       label: 'Temperature',
+      //       data: temp_data.reverse(),
+      //       borderWidth: 5,
+      //       fill: false,
+      //       borderColor: 'red'
+      //     },
+      //     {
+      //       data:secondSetData,//numbers(NUMBER_CFG),
+      //       fill: false,
+      //       borderColor: 'white',
+      //     }]
+      //   },
+      //   options: {
+      //     animation: false,
+      //     legend:{
+      //           display: false
+      //       },
+      //       scales: {
+      //           yAxis :{
+      //             autoSkip: false,
+      //             min: ticks[ticks.length-1],
+      //             Max: ticks[0]
+      //           },
+      //           /*
+      //           afterBuildTicks: function(scale){
+      //               scale.ticks = ticks;
+      //               return;
+      //           },
+      //           beforeUpdate: function(oScale){
+      //           return;
+      //         }
+      //         */
+      //       },
+      //   }
+      // });
+        ///
+
+      // console.log('data');
+      // console.log(document.getElementById('timeSeriesChart')) // .datasets.data);
+
+      // data = temp_data;
+      // chart.update();
+
+
   
       // commented code below implements call to backend send_notification method
 
@@ -261,6 +325,11 @@ document.getElementById("CurrentTemperature").value = data.at(-1)
   // update firebase to signal virtual button is not pressed
   function powerDown() {
       userDataRef.update({virtual_button_pressed: "False"})
+  }
+
+    // update firebase to signal virtual button is not pressed
+  function getTempData() {
+      return temp_data;
   }
 
 </script>
