@@ -237,7 +237,7 @@ Home
         cur_max_threshold = document.getElementById('Max').value;
         if (current_temp > cur_max_threshold && !above_range) {
           above_range = true;
-          send_above_notif();
+          send_above_notif(cur_max_threshold);
         }
         else if (current_temp < cur_max_threshold && above_range) {
           above_range = false;
@@ -246,7 +246,7 @@ Home
         cur_min_threshold = document.getElementById('Min').value;
         if (current_temp < cur_min_threshold && !below_range) {
           below_range = true;
-          send_below_notif();
+          send_below_notif(cur_min_threshold);
         }
         else if (current_temp < cur_min_threshold && below_range) {
           below_range = false;
@@ -257,24 +257,24 @@ Home
       console.log("Error: " + error.code);
   });
 
-  function send_above_notif() {
+  function send_above_notif(limit) {
   var to_num = document.getElementById('phone').value
       console.log(to_num)
 
       let data = new FormData();
       data.append("foo", "bar");
-      axios.post('send_notification/' + to_num + '/working', data) 
+      axios.post('send_notification/' + to_num + '/upper/' + limit, data) 
           .then(res => alert("Form Submitted")) 
           .catch(errors => console.log(errors)) 
   }
 
-  function send_below_notif() {
+  function send_below_notif(limit) {
   var to_num = document.getElementById('phone').value
       console.log(to_num)
 
       let data = new FormData();
       data.append("foo", "bar");
-      axios.post('send_notification/' + to_num + '/working', data) 
+      axios.post('send_notification/' + to_num + '/lower/' + limit, data) 
           .then(res => alert("Form Submitted")) 
           .catch(errors => console.log(errors)) 
   }

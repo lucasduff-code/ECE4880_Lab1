@@ -28,22 +28,24 @@ def hello_there(request, name):
     )
 
 @csrf_exempt
-def send_notification(request, to_num, message):
+def send_notification(request, to_num, notif_message, limit):
 
-    # account_sid = os.environ['TWILIO_ACCOUNT_SID'] 
-    # auth_token = os.environ['TWILIO_AUTH_TOKEN'] 
-    # client = Client(account_sid, auth_token)
+    account_sid = os.environ['TWILIO_ACCOUNT_SID'] 
+    auth_token = os.environ['TWILIO_AUTH_TOKEN'] 
+    client = Client(account_sid, auth_token)
 
-    # message = client.messages \
-    #                 .create(
-    #                     body= message, #"Good morning Brogrammers!",
-    #                     from_='+15052278737',
-    #                     to=to_num #'+15635439088'
-    #                 )
+    send_body = 'The temperature has exceeded the ' + notif_message + ' limit of ' + limit 
+
+    message = client.messages \
+                    .create(
+                        body= send_body, #"Good morning Brogrammers!",
+                        from_='+15052278737',
+                        to= to_num #'+15635439088'
+                    )
 
     # print(message.sid)
 
-    print('SENT MESSAGE!')
+    # print('SENT MESSAGE!')
 
 
-    return JsonResponse({"status": 'Success'}) 
+    return JsonResponse({"status": 'Sent notification to: '}) 
