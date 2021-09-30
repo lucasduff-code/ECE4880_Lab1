@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.http import JsonResponse 
 from django.views.decorators.csrf import csrf_exempt
 import os
-from twilio.rest import Client
+#from twilio.rest import Client
 
 # Replace the existing home function with the one below
 def home(request):

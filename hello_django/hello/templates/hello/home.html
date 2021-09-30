@@ -86,7 +86,6 @@ Home
       document.getElementById("maxD").innerText = 'F'
       document.getElementById("minD").innerText = 'F'
       document.getElementById("unit").innerText = 'F°'
-      document.getElementById("CurrentTemperature").value = Number(Math.round(((max * 9/5) + 32)+'e2')+'e-2');
       document.getElementById("Max").value = Number(Math.round(((max * 9/5) + 32)+'e2')+'e-2');
       document.getElementById("Min").value =  Number(Math.round(((min * 9/5) + 32)+'e2')+'e-2');
       console.log(NUMBER_CFG.min)
@@ -100,7 +99,6 @@ Home
       document.getElementById("maxD").innerText = 'C'
       document.getElementById("minD").innerText = 'C'
       document.getElementById("unit").innerText = 'C°'
-      document.getElementById("CurrentTemperature").value =  Number(Math.round(((max - 32) / (9/5))+'e2')+'e-2');
       document.getElementById("Max").value =  Number(Math.round(((max - 32) / (9/5))+'e2')+'e-2');
       document.getElementById("Min").value =  Number(Math.round(((min - 32) / (9/5))+'e2')+'e-2');
       for(var i = 0, length = data_t.length; i<length; i++){
@@ -125,7 +123,7 @@ Home
   const ctx = document.getElementById('timeSeriesChart').getContext('2d');
   const labels = [];
   for (let i = 0; i < 300; i++) {
-    const time = i;
+    const time = 300-i;
     labels.push(time.toString());
   }
   var ticks = [50,45,35,30,25,20,15,10]; 
@@ -219,7 +217,8 @@ Home
       console.log('updating chart')
       console.log(chart)
       for (let i = 0; i < 300; i++) {
-       data_t[i] = temp_data[i];
+      //  temp_i = i + 1
+       data_t[i] = temp_data[300-i];
       }
       const currentUnit = document.getElementById("maxD").innerText
       if(currentUnit == 'F') {
@@ -229,7 +228,12 @@ Home
       }
       chart.update();
       var current_temp = temp_data.at(0);
-      document.getElementById('CurrentTemperature').value = current_temp;
+
+      if(currentUnit == 'C'){
+        document.getElementById('CurrentTemperature').value = current_temp;
+      } else {
+        document.getElementById("CurrentTemperature").value = Number(Math.round(((current_temp * 9/5) + 32)+'e2')+'e-2');
+      }
   
       // commented code below implements call to backend send_notification method
 
