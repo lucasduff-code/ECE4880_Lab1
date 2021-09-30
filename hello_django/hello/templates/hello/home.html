@@ -179,7 +179,8 @@ Home
   var userDataRef = firebase.database().ref();
   var tempValuesRef = userDataRef.child("last_300_seconds");
 
-  var outside_range = false;
+  var above_range = false;
+  var below_range = false;
   tempValuesRef.on("value", function(snapshot) {
 
       console.log('Firebase value changed...');
@@ -229,93 +230,54 @@ Home
       chart.update();
       var current_temp = temp_data.at(0);
       document.getElementById('CurrentTemperature').value = current_temp;
-
-      // conversion();
-
-            
-      //////////////// 
-
-      // const ctx = document.getElementById('timeSeriesChart').getContext('2d')
-      // const labels = [];
-      // for (let i = 0; i < 300; i++) {
-        // const time = 300-i
-        // labels.push(time.toString())
-      // }
-      // var ticks = [50,45,35,30,25,20,15,10];
-      // var data = [31,32,33,34,25,24,22,11]; // temp_data
-      // var NUMBER_CFG = {count: data.length, min:10, max:50}
-      // var secondSetData = [10,50]
-
-      ///
-      // chart = new Chart(ctx, {
-      //   type: 'line',
-      //   data: {
-      //     labels,
-      //     axesY :{
-      //           title: "Temperature"
-      //         },
-      //     datasets: [{
-      //       label: 'Temperature',
-      //       data: temp_data.reverse(),
-      //       borderWidth: 5,
-      //       fill: false,
-      //       borderColor: 'red'
-      //     },
-      //     {
-      //       data:secondSetData,//numbers(NUMBER_CFG),
-      //       fill: false,
-      //       borderColor: 'white',
-      //     }]
-      //   },
-      //   options: {
-      //     animation: false,
-      //     legend:{
-      //           display: false
-      //       },
-      //       scales: {
-      //           yAxis :{
-      //             autoSkip: false,
-      //             min: ticks[ticks.length-1],
-      //             Max: ticks[0]
-      //           },
-      //           /*
-      //           afterBuildTicks: function(scale){
-      //               scale.ticks = ticks;
-      //               return;
-      //           },
-      //           beforeUpdate: function(oScale){
-      //           return;
-      //         }
-      //         */
-      //       },
-      //   }
-      // });
-        ///
-
-      // console.log('data');
-      // console.log(document.getElementById('timeSeriesChart')) // .datasets.data);
-
-      // data = temp_data;
-      // chart.update();
-
-
   
       // commented code below implements call to backend send_notification method
 
       if (document.getElementById('Max').disabled == true) {
-        var to_num = document.getElementById('phone').value
-        console.log(to_num)
+        cur_max_threshold = document.getElementById('Max').value;
+        if (current_temp > cur_max_threshold && !above_range) {
+          above_range = true;
+          send_above_notif();
+        }
+        else if (current_temp < cur_max_threshold && above_range) {
+          above_range = false;
+        }
 
-        let data = new FormData();
-        data.append("foo", "bar");
-        axios.post('send_notification/' + to_num + '/working', data) 
-            .then(res => alert("Form Submitted")) 
-            .catch(errors => console.log(errors)) 
+        cur_min_threshold = document.getElementById('Min').value;
+        if (current_temp < cur_min_threshold && !below_range) {
+          below_range = true;
+          send_below_notif();
+        }
+        else if (current_temp < cur_min_threshold && below_range) {
+          below_range = false;
+        }
       }
 
   }, function (error) {
       console.log("Error: " + error.code);
   });
+
+  function send_above_notif() {
+  var to_num = document.getElementById('phone').value
+      console.log(to_num)
+
+      let data = new FormData();
+      data.append("foo", "bar");
+      axios.post('send_notification/' + to_num + '/working', data) 
+          .then(res => alert("Form Submitted")) 
+          .catch(errors => console.log(errors)) 
+  }
+
+  function send_below_notif() {
+  var to_num = document.getElementById('phone').value
+      console.log(to_num)
+
+      let data = new FormData();
+      data.append("foo", "bar");
+      axios.post('send_notification/' + to_num + '/working', data) 
+          .then(res => alert("Form Submitted")) 
+          .catch(errors => console.log(errors)) 
+  }
 
   // update firebase to signal virtual button is pressed
   function powerUp() {
