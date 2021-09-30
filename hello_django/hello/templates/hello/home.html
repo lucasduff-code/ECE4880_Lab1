@@ -189,6 +189,7 @@ Home
       let temp_data = [];
       // parse temp data
       var temps = snapshot.val();
+
       for (let i = 0; i < temps.length; i++) {
         temp_i = i + 1;
           if (temps.at(-temp_i) != "DNA" || temps.at(-temp_i) != "US") {
@@ -227,12 +228,21 @@ Home
         }
       }
       chart.update();
-      var current_temp = temp_data.at(0);
+      var current_temp = temps.at(temps.length - 1);
 
-      if(currentUnit == 'C'){
-        document.getElementById('CurrentTemperature').value = current_temp;
+      if (current_temp == "US") {
+        document.getElementById('CurrentTemperature').value = "Unplugged Sensor"
+      } else if (current_temp == "DNA") {
+        document.getElementById('CurrentTemperature').value = "No Data Available"
       } else {
-        document.getElementById("CurrentTemperature").value = Number(Math.round(((current_temp * 9/5) + 32)+'e2')+'e-2');
+
+        current_temp = parseFloat(current_temp)/1000
+
+        if(currentUnit == 'C'){
+          document.getElementById('CurrentTemperature').value = current_temp;
+        } else {
+          document.getElementById("CurrentTemperature").value = Number(Math.round(((current_temp * 9/5) + 32)+'e2')+'e-2');
+        } 
       }
   
       // commented code below implements call to backend send_notification method
@@ -241,7 +251,7 @@ Home
         cur_max_threshold = document.getElementById('Max').value;
         if (current_temp > cur_max_threshold && !above_range) {
           above_range = true;
-          send_above_notif(cur_max_threshold);
+          send_above_notif();
         }
         else if (current_temp < cur_max_threshold && above_range) {
           above_range = false;
@@ -250,7 +260,7 @@ Home
         cur_min_threshold = document.getElementById('Min').value;
         if (current_temp < cur_min_threshold && !below_range) {
           below_range = true;
-          send_below_notif(cur_min_threshold);
+          send_below_notif();
         }
         else if (current_temp < cur_min_threshold && below_range) {
           below_range = false;
@@ -261,24 +271,24 @@ Home
       console.log("Error: " + error.code);
   });
 
-  function send_above_notif(limit) {
+  function send_above_notif() {
   var to_num = document.getElementById('phone').value
       console.log(to_num)
 
       let data = new FormData();
       data.append("foo", "bar");
-      axios.post('send_notification/' + to_num + '/upper/' + limit, data) 
+      axios.post('send_notification/' + to_num + '/working', data) 
           .then(res => alert("Form Submitted")) 
           .catch(errors => console.log(errors)) 
   }
 
-  function send_below_notif(limit) {
+  function send_below_notif() {
   var to_num = document.getElementById('phone').value
       console.log(to_num)
 
       let data = new FormData();
       data.append("foo", "bar");
-      axios.post('send_notification/' + to_num + '/lower/' + limit, data) 
+      axios.post('send_notification/' + to_num + '/working', data) 
           .then(res => alert("Form Submitted")) 
           .catch(errors => console.log(errors)) 
   }
