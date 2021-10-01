@@ -6,5 +6,5 @@ urlpatterns = [
     path("hello/<name>", views.hello_there, name="hello_there"),
     path("about/", views.about, name="about"),
     path("contact/", views.contact, name="contact"),    
-    path("send_notification/<to_num>/<notif_message>/<limit>", views.send_notification, name="send_notification"),     
+    path("send_notification/<to_num>/<notif_message>/<limit>/<unit>", views.send_notification, name="send_notification"),     
 ]

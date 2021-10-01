@@ -1,11 +1,11 @@
 from django.http import HttpResponse
 from django.utils.timezone import datetime
 import re
-from django.shortcuts import render
+from django.shortcuts import render #, render_to_response
 from django.http import JsonResponse 
 from django.views.decorators.csrf import csrf_exempt
 import os
-#from twilio.rest import Client
+from twilio.rest import Client
 
 # Replace the existing home function with the one below
 def home(request):
@@ -28,13 +28,13 @@ def hello_there(request, name):
     )
 
 @csrf_exempt
-def send_notification(request, to_num, notif_message, limit):
+def send_notification(request, to_num, notif_message, limit, unit):
 
     account_sid = os.environ['TWILIO_ACCOUNT_SID'] 
     auth_token = os.environ['TWILIO_AUTH_TOKEN'] 
     client = Client(account_sid, auth_token)
 
-    send_body = 'The temperature has exceeded the ' + notif_message + ' limit of ' + limit 
+    send_body = 'The temperature has exceeded the ' + notif_message + ' limit of ' + limit + ' ' + unit
 
     message = client.messages \
                     .create(
@@ -48,4 +48,4 @@ def send_notification(request, to_num, notif_message, limit):
     # print('SENT MESSAGE!')
 
 
-    return JsonResponse({"status": 'Sent notification to: '}) 
+    return HttpResponse(status=200)  #JsonResponse({"status": 'Sent notification to: '}) 
