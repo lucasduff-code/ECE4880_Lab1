@@ -3,7 +3,6 @@
 Home
 {% endblock %}
 {% block content %}
-<p>Home page for the Lab 1 Computer Interface. There will be a graph below.</p>
 <button id="button" onmousedown="powerUp()" onmouseup="powerDown()" onmouseleave="powerDown()">POWER</button>
 
 <!-- Rectangular switch -->
@@ -15,7 +14,7 @@ Home
 <label for="switch">F</label>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js'></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js'></script>
-<div class="chart-container" style="position: relative; height: 60vh; width: 120vh; padding: 30px; border: 2px solid; resize: both;">
+<div class="chart-container" style="position: relative; height: 60vh; width: 120vh; padding: 30px; border: 2px solid; resize: both; overflow: auto;">
   <canvas id="timeSeriesChart"></canvas>
 </div>
 <div class="notifications">
@@ -38,10 +37,10 @@ Home
     </form>
   </div>
 </div>
-<div class="currentReading" style="position: absolute; top: 100px; left: 1000px;">
+<div class="currentReading" style="position: absolute; top: 100px; left: 1100px;">
   <form>
     <label for="CurrentTemperature" style="font-size: larger; font-weight: bold;">Current Temperature: </label><br>
-    <input type="text" id="CurrentTemperature" readonly style="font-size: larger; font-weight: bold;">
+    <input type="text" id="CurrentTemperature" readonly style="font-size: larger; font-weight: bold; color: red">
     <label for="CurrentTemperature" id="unit" style="font-size: larger; font-weight: bold;">C°</label>
   </form>
 </div>
@@ -136,9 +135,6 @@ Home
     type: 'line',
     data: {
       labels,
-      axesY :{
-        title: "Temperature"
-      },
       datasets: [{
         // label: 'Temperature',
         data: data_t,
@@ -149,19 +145,33 @@ Home
       {
         data:secondSetData, //numbers(NUMBER_CFG),
         fill: false,
-        borderColor: 'blue',
+        borderColor: 'white',
       }]
     },
     options: {
       legend:{
         display: false
       },
+      title:{
+        display: true,
+        text: 'Temperature vs. Time'
+      },
       scales: {
-        yAxis :{
+        yAxes :[{
           autoSkip: false,
           min: ticks[ticks.length-1],
-          Max: ticks[0]
-        },
+          Max: ticks[0],
+          scaleLabel:{
+            display: true,
+            labelString: "Temperature (Degrees)"
+          }
+        }],
+        xAxes: [{
+          scaleLabel:{
+            display: true,
+            labelString: "Time (Seconds Ago)"
+          }
+        }],
       },
     }
   });

@@ -98,3 +98,8 @@ input:checked + .slider:before {
 .max-min-inputs{
     position: relative;
 }
+
+.rotate-text {
+    width: 25px;
+    transform: rotate(90deg);
+ }
